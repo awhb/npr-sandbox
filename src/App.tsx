@@ -87,14 +87,14 @@ const App = () => {
 		const normalMatrix = glMatrix.mat4.transpose(glMatrix.mat4.create(), modelViewMatrixInverse);
 
 		const primitiveState: GPUPrimitiveState = {
-		topology: 'triangle-list' as GPUPrimitiveTopology,
-		frontFace: 'ccw' as GPUFrontFace,
-		cullMode: 'none' as GPUCullMode,
+			topology: 'triangle-list' as GPUPrimitiveTopology,
+			frontFace: 'ccw' as GPUFrontFace,
+			cullMode: 'none' as GPUCullMode,
 		}
 		const depthStencilState: GPUDepthStencilState = {
-		depthWriteEnabled: true,
-		depthCompare: 'less' as GPUCompareFunction,
-		format: 'depth24plus-stencil8' as GPUTextureFormat,
+			depthWriteEnabled: true,
+			depthCompare: 'less' as GPUCompareFunction,
+			format: 'depth24plus-stencil8' as GPUTextureFormat,
 		}
 		webGpuContext.instance!.render_obj_model(objModelWgsl, "teapot.obj", Float32Array.from(modelViewMatrix), Float32Array.from(projectionMatrix), Float32Array.from(normalMatrix), primitiveState, depthStencilState);
 
