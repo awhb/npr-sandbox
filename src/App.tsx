@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as glMatrix from "gl-matrix";
 
 // import shaders
-import triangleWgsl from "./shaders/triangle.wgsl?raw";
+// import triangleWgsl from "./shaders/triangle.wgsl?raw";
 import textureWgsl from "./shaders/textured_shape.wgsl?raw";
 
 const App = () => {
