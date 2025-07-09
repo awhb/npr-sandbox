@@ -5,6 +5,9 @@
     "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
+    /*********************SPECIAL FOR WEBGPU!! ************/
+    "types": ["@webgpu/types"],
+    /******************************************************/
 
     /* Bundler mode */
     "moduleResolution": "bundler",
