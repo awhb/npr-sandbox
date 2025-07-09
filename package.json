@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/obj-file-parser": "^0.5.2",
     "@webgpu/types": "^0.1.64",
     "gl-matrix": "^3.4.3",
     "obj-file-parser": "^0.6.2",
