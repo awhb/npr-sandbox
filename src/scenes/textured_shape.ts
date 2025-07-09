@@ -1,6 +1,6 @@
 import * as glMatrix from "gl-matrix";
 import type { WebGPUContext } from "../core/webgpu-context";
-import textureWgsl from "./shaders/textured_shape.wgsl?raw";
+import textureWgsl from "../shaders/textured_shape.wgsl?raw";
 
 const renderObjModelScene = async (webGpuContext: WebGPUContext) => {
     const transformationMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), 

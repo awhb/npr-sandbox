@@ -1,6 +1,6 @@
 import * as glMatrix from "gl-matrix";
 import type { WebGPUContext } from "../core/webgpu-context";
-import depthTestingWgsl from "./shaders/depth_testing.wgsl?raw";
+import depthTestingWgsl from "../shaders/depth_testing.wgsl?raw";
 
 const renderDepthTestingScene = async (webGpuContext: WebGPUContext) => {
     // DEPTH TESTING

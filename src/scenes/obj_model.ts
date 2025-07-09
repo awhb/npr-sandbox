@@ -1,6 +1,6 @@
 import * as glMatrix from "gl-matrix";
 import type { WebGPUContext } from "../core/webgpu-context";
-import objModelWgsl from "./shaders/obj_model.wgsl?raw"; 
+import objModelWgsl from "../shaders/obj_model.wgsl?raw"; 
 
 const renderObjModelScene = async (webGpuContext: WebGPUContext) => {
     const modelViewMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), glMatrix.vec3.fromValues(3, 3, 3), glMatrix.vec3.fromValues(0, 0, 0), glMatrix.vec3.fromValues(0.0, 0.0, 1.0));

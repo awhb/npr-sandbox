@@ -1,5 +1,5 @@
 import type { WebGPUContext } from "../core/webgpu-context";
-import triangleWgsl from "./shaders/triangle.wgsl?raw";
+import triangleWgsl from "../shaders/triangle.wgsl?raw";
 
 const renderTriangleScene = async (webGpuContext: WebGPUContext) => {
     // BASIC TRIANGLE
