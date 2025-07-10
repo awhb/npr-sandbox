@@ -1,27 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { WebGPUContext } from "./core/webgpu-context";
-import renderScene from "./scenes/text";
+import renderScene from "./scenes/obj_model";
 
-const App = () => {
+export const App: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [webGpuSupported, setWebGpuSupported] = useState(true);
 
   	const render = async () => {
         const primitiveState: GPUPrimitiveState = {
-            topology: 'triangle-strip' as GPUPrimitiveTopology, // only for this gaussian blur implementation
+            topology: 'triangle-list' as GPUPrimitiveTopology,
             frontFace: 'ccw' as GPUFrontFace,
             cullMode: 'none' as GPUCullMode,
         }
-        // const depthStencilState: GPUDepthStencilState = {
-        //     depthWriteEnabled: true,
-        //     depthCompare: 'less' as GPUCompareFunction,
-        //     format: 'depth24plus-stencil8' as GPUTextureFormat,
-        // }
         const webGpuContext = await WebGPUContext.create({
             canvas: canvasRef.current!,
             primitiveState,
-            // depthStencilState,
-            // msaa: 4
+            depthStencilState: {
+                depthWriteEnabled: true,
+                depthCompare: 'less' as GPUCompareFunction,
+                format: 'depth24plus-stencil8' as GPUTextureFormat,
+            }
         });
 
 		if (webGpuContext.error) {
@@ -48,8 +46,8 @@ const App = () => {
 	}, []);
 
 	return (
-		<div>
-			<canvas ref={canvasRef} width={640} height={480}></canvas>
+        <div style={{display: "flex", flexDirection: "column", height: "100%", position: "relative"}}>
+            <canvas ref={canvasRef} width={640} height={480} style={{flexGrow: 1, flexShrink: 0}}></canvas>
 			{!webGpuSupported && (
 				<div style={{ color: "red", marginTop: "1rem" }}>
 					Your browser does not support WebGPU. Please download a browser from
@@ -60,4 +58,3 @@ const App = () => {
 	)
 };
 
-export default App;
