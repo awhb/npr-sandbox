@@ -23,7 +23,7 @@ const renderScene = async (webGpuContext: WebGPUContext) => {
         frontFace: 'ccw' as GPUFrontFace,
         cullMode: 'none' as GPUCullMode,
     }
-    webGpuContext.render_textured_shape(textureWgsl, 3, 1, positions, texCoords, Float32Array.from(transformationMatrix), Float32Array.from(projectionMatrix), "baboon.png", primitiveState);
+    webGpuContext.render_textured_shape(textureWgsl, 3, 1, positions, texCoords, Float32Array.from(transformationMatrix), Float32Array.from(projectionMatrix), "baboon.png");
 };
 
 export default renderScene;

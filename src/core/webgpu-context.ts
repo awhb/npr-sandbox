@@ -278,7 +278,7 @@ export class WebGPUContext {
 		return sampler;
 	}
 
-	public render_vertex_color_offset(shaderCode: string, vertexCount: number, instanceCount: number, vertices: Float32Array, colors: Float32Array, offset: Float32Array, primitiveState: GPUPrimitiveState) {
+	public render_vertex_color_offset(shaderCode: string, vertexCount: number, instanceCount: number, vertices: Float32Array, colors: Float32Array, offset: Float32Array) {
 
 		const { buffer: positionBuffer, layout: positionBufferLayout } = this._createSingleAttributeVertexBuffer(vertices, { format: "float32x3", offset: 0, shaderLocation: 0 }, 3 * Float32Array.BYTES_PER_ELEMENT);
 		const { buffer: colorBuffer, layout: colorBufferLayout } = this._createSingleAttributeVertexBuffer(colors, { format: "float32x3", offset: 0, shaderLocation: 1 }, 3 * Float32Array.BYTES_PER_ELEMENT);
@@ -304,7 +304,7 @@ export class WebGPUContext {
 	}
 
 	public async render_textured_shape(shaderCode: string, vertexCount: number, instanceCount: number, vertices: Float32Array, texCoords: Float32Array,
-		transformationMatrix: Float32Array, projectionMatrix: Float32Array, imgUri: string, primitiveState: GPUPrimitiveState) {
+		transformationMatrix: Float32Array, projectionMatrix: Float32Array, imgUri: string) {
 		const response = await fetch(imgUri);
 		const blob = await response.blob();
 		const imageBitmap = await createImageBitmap(blob);
@@ -353,7 +353,7 @@ export class WebGPUContext {
 	}
 
 
-	public render_depth_testing(shaderCode: string, vertexCount: number, instanceCount: number, vertices: Float32Array, transformationMatrix: Float32Array, projectionMatrix: Float32Array, primitiveState: GPUPrimitiveState, depthStencilState: GPUDepthStencilState) {
+	public render_depth_testing(shaderCode: string, vertexCount: number, instanceCount: number, vertices: Float32Array, transformationMatrix: Float32Array, projectionMatrix: Float32Array) {
 		const depthTexture = this._createDepthTexture();
 
 		const transformationMatrixBuffer = this._createGPUBuffer(transformationMatrix, GPUBufferUsage.UNIFORM);

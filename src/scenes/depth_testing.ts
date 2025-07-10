@@ -20,17 +20,7 @@ const renderScene = async (webGpuContext: WebGPUContext) => {
         -100.0, 100.0, 0.0,
         -100.0, 100.0, 200.0
     ]);
-    const primitiveState: GPUPrimitiveState = {
-        topology: 'triangle-strip' as GPUPrimitiveTopology,
-        frontFace: 'ccw' as GPUFrontFace,
-        cullMode: 'none' as GPUCullMode,
-    }
-    const depthStencilState: GPUDepthStencilState = {
-        depthWriteEnabled: true,
-        depthCompare: 'less' as GPUCompareFunction,
-        format: 'depth24plus-stencil8' as GPUTextureFormat,
-    }
-    webGpuContext.render_depth_testing(depthTestingWgsl, 10, 1, positions, Float32Array.from(transformationMatrix), Float32Array.from(projectionMatrix), primitiveState, depthStencilState);
+    webGpuContext.render_depth_testing(depthTestingWgsl, 10, 1, positions, Float32Array.from(transformationMatrix), Float32Array.from(projectionMatrix));
 };
 
 export default renderScene;

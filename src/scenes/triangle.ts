@@ -16,7 +16,7 @@ const renderScene = async (webGpuContext: WebGPUContext) => {
         frontFace: 'ccw' as GPUFrontFace,
         cullMode: 'none' as GPUCullMode,
     }
-    webGpuContext.render_vertex_color_offset(triangleWgsl, 3, 1, positions, colors, offset, primitiveState);
+    webGpuContext.render_vertex_color_offset(triangleWgsl, 3, 1, positions, colors, offset);
 };
 
 export default renderScene;
