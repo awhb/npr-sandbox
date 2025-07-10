@@ -293,7 +293,7 @@ export class WebGPUContext {
 
 		const passEncoder = commandEncoder.beginRenderPass(this._createRenderTarget());
 		passEncoder.setViewport(0, 0, this._canvas.width, this._canvas.height, 0, 1);
-		passEncoder.setPipeline(this._createPipeline(this._createShaderModule(shaderCode), [positionBufferLayout, colorBufferLayout], [uniformBindGroupLayout], primitiveState));
+		passEncoder.setPipeline(this._createPipeline(this._createShaderModule(shaderCode), [positionBufferLayout, colorBufferLayout], [uniformBindGroupLayout]));
 		passEncoder.setVertexBuffer(0, positionBuffer);
 		passEncoder.setVertexBuffer(1, colorBuffer);
 		passEncoder.setBindGroup(0, uniformBindGroup);
@@ -342,7 +342,7 @@ export class WebGPUContext {
 
 		const passEncoder = commandEncoder.beginRenderPass(this._createRenderTarget());
 		passEncoder.setViewport(0, 0, this._canvas.width, this._canvas.height, 0, 1);
-		passEncoder.setPipeline(this._createPipeline(this._createShaderModule(shaderCode), [positionBufferLayout, texCoordBufferLayout], [uniformBindGroupLayout], primitiveState));
+		passEncoder.setPipeline(this._createPipeline(this._createShaderModule(shaderCode), [positionBufferLayout, texCoordBufferLayout], [uniformBindGroupLayout]));
 		passEncoder.setVertexBuffer(0, positionBuffer);
 		passEncoder.setVertexBuffer(1, texCoordBuffer);
 		passEncoder.setBindGroup(0, uniformBindGroup);
@@ -376,7 +376,7 @@ export class WebGPUContext {
 
 		const passEncoder = commandEncoder.beginRenderPass(this._createRenderTarget(depthTexture));
 		passEncoder.setViewport(0, 0, this._canvas.width, this._canvas.height, 0, 1);
-		passEncoder.setPipeline(this._createPipeline(this._createShaderModule(shaderCode), [positionBufferLayout], [uniformBindGroupLayout], primitiveState, depthStencilState));
+		passEncoder.setPipeline(this._createPipeline(this._createShaderModule(shaderCode), [positionBufferLayout], [uniformBindGroupLayout]));
 		passEncoder.setVertexBuffer(0, positionBuffer);
 		passEncoder.setBindGroup(0, uniformBindGroup);
 		passEncoder.draw(vertexCount, instanceCount);
