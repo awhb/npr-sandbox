@@ -1,7 +1,7 @@
 import * as glMatrix from "gl-matrix";
 import type { WebGPUContext } from "../core/webgpu-context";
-import vertGaussianBlurWgsl from "../shaders/vert_gaussian_blur.wgsl";
-import horizGaussianBlurWgsl from "../shaders/horiz_gaussian_blur.wgsl";
+import vertGaussianBlurWgsl from "../shaders/vert_gaussian_blur.wgsl?raw";
+import horizGaussianBlurWgsl from "../shaders/horiz_gaussian_blur.wgsl?raw";
 
 const renderScene = async (webGpuContext: WebGPUContext) => {
     const transformationMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), 
