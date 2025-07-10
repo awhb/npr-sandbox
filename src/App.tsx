@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { WebGPUContext } from "./core/webgpu-context";
-import renderObjModelScene from "./scenes/obj_model";
+import renderScene from "./scenes/obj_model";
 
 const App = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,7 +16,7 @@ const App = () => {
 
 		// call specific scene renderer
 		if (webGpuContext.instance) {
-			await renderObjModelScene(webGpuContext.instance);
+			await renderScene(webGpuContext.instance);
 		}
 
   }

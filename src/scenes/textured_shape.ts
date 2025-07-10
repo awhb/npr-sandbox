@@ -2,7 +2,7 @@ import * as glMatrix from "gl-matrix";
 import type { WebGPUContext } from "../core/webgpu-context";
 import textureWgsl from "../shaders/textured_shape.wgsl?raw";
 
-const renderObjModelScene = async (webGpuContext: WebGPUContext) => {
+const renderScene = async (webGpuContext: WebGPUContext) => {
     const transformationMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), 
       glMatrix.vec3.fromValues(100, 100, 100), 
       glMatrix.vec3.fromValues(0,0,0), 
@@ -26,4 +26,4 @@ const renderObjModelScene = async (webGpuContext: WebGPUContext) => {
     webGpuContext.render_textured_shape(textureWgsl, 3, 1, positions, texCoords, Float32Array.from(transformationMatrix), Float32Array.from(projectionMatrix), "baboon.png", primitiveState);
 };
 
-export default renderObjModelScene;
+export default renderScene;
