@@ -1,6 +1,8 @@
 import * as glMatrix from "gl-matrix";
 import { ObjDataExtractor } from "../utils/objDataExtractor";
 import { VideoLoader } from "../utils/videoLoader";
+import { Arcball } from "../utils/arcball";
+import { Controls } from "../utils/controls";
 
 interface WebGpuContextInitResult {
 	instance?: WebGPUContext;
@@ -465,6 +467,8 @@ export class WebGPUContext {
         const { buffer: normalBuffer, layout: normalBufferLayout } = this._createSingleAttributeVertexBuffer(objDataExtractor.normals, { format: "float32x3", offset: 0, shaderLocation: 1 }, 3 * Float32Array.BYTES_PER_ELEMENT);
         const indexBuffer = this._createGPUBuffer(objDataExtractor.indices, GPUBufferUsage.INDEX);
 
+        const arcBall = new Arcball(5.0);
+
         const render = () => {
             const devicePixelRatio = window.devicePixelRatio || 1;
             const currentCanvasWidth = this._canvas.clientWidth * devicePixelRatio;
@@ -490,10 +494,25 @@ export class WebGPUContext {
                 projectionMatrixUpdateBuffer = this._createGPUBuffer(Float32Array.from(updateProjectionMatrix), GPUBufferUsage.COPY_SRC);
             }
 
+            const modelViewMatrix = arcBall.getMatrices();
+            const modelViewMatrixUpdateBuffer = this._createGPUBuffer(Float32Array.from(modelViewMatrix), GPUBufferUsage.COPY_SRC);
+
+            const modelViewMatrixInverse = glMatrix.mat4.invert(glMatrix.mat4.create(), modelViewMatrix);
+            const normalMatrix = glMatrix.mat4.transpose(glMatrix.mat4.create(), modelViewMatrixInverse);
+            const normalMatrixUpdateBuffer = this._createGPUBuffer(Float32Array.from(normalMatrix), GPUBufferUsage.COPY_SRC);
+
+            const viewDirection = glMatrix.vec3.fromValues(-arcBall.forward[0], -arcBall.forward[1], -arcBall.forward[2]);
+            const viewDirectionUpdateBuffer = this._createGPUBuffer(Float32Array.from(viewDirection), GPUBufferUsage.COPY_SRC);
+
             const commandEncoder = this._device.createCommandEncoder();
             if (projectionMatrixUpdateBuffer != null) {
                 commandEncoder.copyBufferToBuffer(projectionMatrixUpdateBuffer, 0, projectionMatrixBuffer, 0, 16 * Float32Array.BYTES_PER_ELEMENT);
             }
+
+            commandEncoder.copyBufferToBuffer(modelViewMatrixUpdateBuffer, 0, transformationMatrixBuffer, 0, 16 * Float32Array.BYTES_PER_ELEMENT);
+            commandEncoder.copyBufferToBuffer(normalMatrixUpdateBuffer, 0, normalMatrixBuffer, 0, 16 * Float32Array.BYTES_PER_ELEMENT);
+            commandEncoder.copyBufferToBuffer(viewDirectionUpdateBuffer, 0, viewDirectionBuffer, 0, 3 * Float32Array.BYTES_PER_ELEMENT);
+            commandEncoder.copyBufferToBuffer(viewDirectionUpdateBuffer, 0, lightDirectionBuffer, 0, 3 * Float32Array.BYTES_PER_ELEMENT);
 
             const passEncoder = commandEncoder.beginRenderPass(this._createRenderTarget(this._context.getCurrentTexture(), {r: 1.0, g: 0.0, b: 0.0, a: 1.0}, this._msaa, depthTexture));
             passEncoder.setViewport(0, 0, this._canvas.width, this._canvas.height, 0, 1);
@@ -510,6 +529,7 @@ export class WebGPUContext {
             requestAnimationFrame(render);
         }
     
+        new Controls(this._canvas, arcBall, render);
         requestAnimationFrame(render);
     }
 
