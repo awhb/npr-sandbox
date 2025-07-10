@@ -1,4 +1,5 @@
 import { ObjDataExtractor } from "../utils/objDataExtractor";
+import { VideoLoader } from "../utils/videoLoader";
 
 interface WebGpuContextInitResult {
 	instance?: WebGPUContext;
@@ -571,5 +572,65 @@ export class WebGPUContext {
         passEncoderTwo.end();
     
         this._device.queue.submit([commandEncoder.finish()]);
+    }
+
+    public async render_video_texture(shaderCode: string, vertexCount: number, instanceCount: number, vertices: Float32Array, texCoords: Float32Array,
+        transformationMatrix: Float32Array, projectionMatrix: Float32Array, videoUrl: string) {
+        const videoLoader = await VideoLoader.create(videoUrl);
+        const videoTexture = this._createTexture(videoLoader.videoElement.videoWidth, videoLoader.videoElement.videoHeight);
+        videoLoader.videoElement.ontimeupdate = async (_event) => {
+            const imagedData = await createImageBitmap(videoLoader.videoElement);
+            this._device.queue.copyExternalImageToTexture({ source: imagedData }, {texture: videoTexture}, {width: imagedData.width, height: imagedData.height});
+        }
+
+        const transformationMatrixBuffer = this._createGPUBuffer(transformationMatrix, GPUBufferUsage.UNIFORM);
+        const projectionMatrixBuffer = this._createGPUBuffer(projectionMatrix, GPUBufferUsage.UNIFORM);
+        const sampler = this._createSampler();
+
+        const transformationMatrixBindGroupInput: IBindGroupInput = {
+            type: "buffer",
+            visibility: GPUShaderStage.VERTEX,
+            buffer: transformationMatrixBuffer,
+        }
+        const projectionMatrixBindGroupInput: IBindGroupInput = {
+            type: "buffer",
+            visibility: GPUShaderStage.VERTEX,
+            buffer: projectionMatrixBuffer,
+        }
+        const textureBindGroupInput: IBindGroupInput = {
+            type: "texture",
+            visibility: GPUShaderStage.FRAGMENT,
+            texture: videoTexture,
+        }
+        const samplerBindGroupInput: IBindGroupInput = {
+            type: "sampler",
+            visibility: GPUShaderStage.FRAGMENT,
+            sampler: sampler,
+        }
+        const { bindGroupLayout: uniformBindGroupLayout, bindGroup: uniformBindGroup } = this._createUniformBindGroup([transformationMatrixBindGroupInput, projectionMatrixBindGroupInput, textureBindGroupInput, samplerBindGroupInput]);
+
+        // CREATE VERTEX BUFFERS
+        const { buffer: positionBuffer, layout: positionBufferLayout } = this._createSingleAttributeVertexBuffer(vertices, { format: "float32x3", offset: 0, shaderLocation: 0 }, 3 * Float32Array.BYTES_PER_ELEMENT);
+        const { buffer: texCoordBuffer, layout: texCoordBufferLayout } = this._createSingleAttributeVertexBuffer(texCoords, { format: "float32x2", offset: 0, shaderLocation: 1 }, 2 * Float32Array.BYTES_PER_ELEMENT);
+
+        // CREATE COMMAND ENCODER
+        const render = () => {
+            const commandEncoder = this._device.createCommandEncoder();
+
+            const passEncoder = commandEncoder.beginRenderPass(this._createRenderTarget(this._context.getCurrentTexture(), {r: 1.0, g: 0.0, b: 0.0, a: 1.0}, this._msaa));
+            passEncoder.setViewport(0, 0, this._canvas.width, this._canvas.height, 0, 1);
+            passEncoder.setPipeline(this._createPipeline(this._createShaderModule(shaderCode), [positionBufferLayout, texCoordBufferLayout], [uniformBindGroupLayout], "bgra8unorm"));
+            passEncoder.setVertexBuffer(0, positionBuffer);
+            passEncoder.setVertexBuffer(1, texCoordBuffer);
+            passEncoder.setBindGroup(0, uniformBindGroup);
+            passEncoder.draw(vertexCount, instanceCount);
+            passEncoder.end();
+
+            this._device.queue.submit([commandEncoder.finish()]);
+
+            requestAnimationFrame(render);
+        }
+        
+        requestAnimationFrame(render);
     }
 }
