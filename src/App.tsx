@@ -7,7 +7,23 @@ const App = () => {
 	const [webGpuSupported, setWebGpuSupported] = useState(true);
 
   	const render = async () => {
-		const webGpuContext = await WebGPUContext.create(canvasRef.current!);
+        const primitiveState: GPUPrimitiveState = {
+            topology: 'triangle-list' as GPUPrimitiveTopology,
+            frontFace: 'ccw' as GPUFrontFace,
+            cullMode: 'none' as GPUCullMode,
+        }
+        const depthStencilState: GPUDepthStencilState = {
+            depthWriteEnabled: true,
+            depthCompare: 'less' as GPUCompareFunction,
+            format: 'depth24plus-stencil8' as GPUTextureFormat,
+        }
+        const webGpuContext = await WebGPUContext.create({
+            canvas: canvasRef.current!,
+            primitiveState,
+            depthStencilState,
+            msaa: 4
+        });
+
 		if (webGpuContext.error) {
 			console.error(webGpuContext.error);
 			setWebGpuSupported(false);
