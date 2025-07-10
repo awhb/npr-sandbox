@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { WebGPUContext } from "./core/webgpu-context";
-import renderScene from "./scenes/video_texture";
+import renderScene from "./scenes/text";
 
 const App = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
