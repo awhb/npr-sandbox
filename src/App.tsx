@@ -8,20 +8,20 @@ const App = () => {
 
   	const render = async () => {
         const primitiveState: GPUPrimitiveState = {
-            topology: 'triangle-list' as GPUPrimitiveTopology,
+            topology: 'triangle-strip' as GPUPrimitiveTopology, // only for this gaussian blur implementation
             frontFace: 'ccw' as GPUFrontFace,
             cullMode: 'none' as GPUCullMode,
         }
-        const depthStencilState: GPUDepthStencilState = {
-            depthWriteEnabled: true,
-            depthCompare: 'less' as GPUCompareFunction,
-            format: 'depth24plus-stencil8' as GPUTextureFormat,
-        }
+        // const depthStencilState: GPUDepthStencilState = {
+        //     depthWriteEnabled: true,
+        //     depthCompare: 'less' as GPUCompareFunction,
+        //     format: 'depth24plus-stencil8' as GPUTextureFormat,
+        // }
         const webGpuContext = await WebGPUContext.create({
             canvas: canvasRef.current!,
             primitiveState,
-            depthStencilState,
-            msaa: 4
+            // depthStencilState,
+            // msaa: 4
         });
 
 		if (webGpuContext.error) {
