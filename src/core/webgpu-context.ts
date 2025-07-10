@@ -178,15 +178,19 @@ export class WebGPUContext {
 			const input = bindGroupInputs[i];
 			switch (input.type) {
 				case "buffer":
-					layoutEntries.push({ binding: i, visibility: GPUShaderStage.VERTEX, buffer: {} });
-					bindGroupEntries.push({ binding: i, resource: { buffer: input.buffer! } });
-					break;
+                    const layoutEntry = { binding: i, visibility: input.visibility, buffer: {} }
+                    if (input.readonly) {
+                        layoutEntry.buffer = {type: "read-only-storage"};
+                    }
+                    layoutEntries.push(layoutEntry);
+                    bindGroupEntries.push({ binding: i, resource: { buffer: input.buffer! } });
+                    break;
 				case "texture":
-					layoutEntries.push({ binding: i, visibility: GPUShaderStage.FRAGMENT, texture: {} });
+					layoutEntries.push({ binding: i, visibility: input.visibility, texture: {} });
 					bindGroupEntries.push({ binding: i, resource: input.texture!.createView() });
 					break;
 				case "sampler":
-					layoutEntries.push({ binding: i, visibility: GPUShaderStage.FRAGMENT, sampler: {} });
+					layoutEntries.push({ binding: i, visibility: input.visibility, sampler: {} });
 					bindGroupEntries.push({ binding: i, resource: input.sampler! });
 					break;
 			}
