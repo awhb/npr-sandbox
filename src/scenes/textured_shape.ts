@@ -18,11 +18,6 @@ const renderScene = async (webGpuContext: WebGPUContext) => {
       0.0, 0.0,
       0.5, 1.0
     ]);
-    const primitiveState: GPUPrimitiveState = {
-        topology: 'triangle-strip' as GPUPrimitiveTopology,
-        frontFace: 'ccw' as GPUFrontFace,
-        cullMode: 'none' as GPUCullMode,
-    }
     webGpuContext.render_textured_shape(textureWgsl, 3, 1, positions, texCoords, Float32Array.from(transformationMatrix), Float32Array.from(projectionMatrix), "baboon.png");
 };
 
